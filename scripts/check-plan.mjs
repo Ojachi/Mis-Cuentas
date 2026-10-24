@@ -130,10 +130,6 @@ const decisions = new Map(
   ]),
 );
 if (decisions.size !== 9) fail(`expected 9 decisions, found ${decisions.size}`);
-for (const number of ['02', '03', '04', '05', '06', '07', '08', '09']) {
-  if (decisions.get(`D${number}`)?.status !== 'OPEN')
-    fail(`D${number} must remain OPEN`);
-}
 if (decisions.get('D01')?.status !== 'APPROVED') fail('D01 must be APPROVED');
 for (const [decision, details] of decisions) {
   const gated = [...taskBodies].flatMap(([id, body]) => {

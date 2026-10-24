@@ -13,8 +13,11 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const suite = process.argv[2];
-if (process.argv.length !== 3 || !['harness', 'access'].includes(suite)) {
-  console.error('Expected exactly one DB suite: harness or access');
+if (
+  process.argv.length !== 3 ||
+  !['harness', 'access', 'money'].includes(suite)
+) {
+  console.error('Expected exactly one DB suite: harness, access or money');
   process.exitCode = 1;
 } else {
   const root = resolve(import.meta.dirname, '..');
@@ -93,6 +96,23 @@ sql_paths = ["./seed.sql"]
 
     if (suite === 'harness') {
       query('harness.sql');
+    } else if (suite === 'money') {
+      const fixtures = readFileSync(
+        join(root, 'tests', 'fixtures', 'money-effects.json'),
+        'utf8',
+      );
+      const probePath = join(workdir, 'money.sql');
+      writeFileSync(
+        probePath,
+        readFileSync(
+          join(root, 'tests', 'db', 'money', 'check.sql'),
+          'utf8',
+        ).replace(
+          '__MONEY_FIXTURES__',
+          `'${fixtures.replaceAll("'", "''")}'::jsonb`,
+        ),
+      );
+      command([...scoped, 'db', 'query', '--local', '--file', probePath]);
     } else {
       query('access/setup.sql');
       query('access/bypass-probe.sql');

@@ -26,7 +26,7 @@ Sales, supplier purchases, operating expenses, owner contributions, owner withdr
 - WHEN a member attempts to edit it while offline
 - THEN the system denies the edit and leaves the historical record unchanged
 
-The MVP MUST NOT promise recovery from a lost unsynchronized sole device.
+Approved D05 permits offline access for at most 24 hours after online authorization validation and retains user-isolated unsent records on logout. Revocation is audited with server time and actor. Operations forbidden on reconnect MUST remain attention outside financial totals until an authorized Administrator explicitly approves server-validated incorporation with original-author/approver audit. Claimed offline timestamps MUST NOT automatically authorize pre-revocation acceptance; possibly-sent unknown outcomes resolve before a new linked attempt. The MVP MUST NOT promise recovery from a lost unsynchronized sole device.
 
 ### Requirement: Frozen identity and receipt resolution
 

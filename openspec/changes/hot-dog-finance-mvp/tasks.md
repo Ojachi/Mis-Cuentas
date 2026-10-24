@@ -18,7 +18,7 @@ Read [proposal](proposal.md), [access](specs/business-access/spec.md), [records]
 | Integration/tracker | `develop` for development; `main` reserved for stable promotion |
 | Work grouping | Six groups below; 23 implementation units plus P0, not six forced PRs |
 
-Initial snapshot `06feca1` is published on both `main` and `develop`; further authorized implementation goes to `develop`, leaving `main` unchanged until stable promotion is explicitly authorized. The earlier feature-branch chain is superseded, not a prerequisite for new work. Independent agents may use isolated detached worktrees without publishing feature branches; parent integration owns shared files and Git operations. Record task scope, dependencies, proof and rollback before each commit/push.
+Initial snapshot `06feca1` is published on both `main` and `develop`; further authorized implementation goes to `develop`, leaving `main` unchanged until stable promotion is explicitly authorized. The earlier feature-branch chain is superseded. D01–D09 policies are now approved in the central register, not evidence of task completion. Native RDD is disabled. The unresolved isolated T2.2 failure is deferred by explicit user instruction; advance only independent eligible work. Independent agents use isolated worktrees; parent owns shared files and Git. Record scope, dependencies, proof and rollback before each commit/push.
 
 Each task is a cohesive work unit with its fixtures/docs. About 400 authored lines is a reviewability heuristic, not a task acceptance gate or a reason to omit tests or create unwanted PRs. Retain task IDs, assign proof and report actual size. Do not compress code/tests to fit the heuristic. Never mark a task complete while acceptance, an explicit dependency or a product decision remains blocked.
 
@@ -59,12 +59,12 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
 ## P0 — workflow and product gate
 
 - [x] **P0 — Establish safe starting boundary and decision routing**
-  - Depends: none. Decisions: none (workflow-only gate; D01 is approved, D02–D09 still require individual human decisions).
+  - Depends: none. Decisions: none (workflow-only gate; D01–D09 have recorded human policy approval, not task or pilot acceptance).
   - Surface: this task file and [decision register](design.md#decision-register); future repository/tooling state read-only until separately authorized implementation setup.
   - Spec: all four specifications; [single-business boundary](specs/business-access/spec.md#requirement-single-business-membership-boundary).
   - Accept: record actual repository/scaffold state, authorized implementation setup and branch prerequisites, owner/status for each D01–D09. The historical Gentle AI 4.2.0 / missing `sdd-attempt` blocker is prior-session context, NOT rechecked here; future implementation must recheck its workflow prerequisites before execution, without assuming recovery. No unconditional “Decision needed before apply: No.”
   - Check: future `pnpm check:plan`; before scaffold, manual/read-only structural plan check with recorded result.
-  - Expected: task graph and OPEN gates resolve; T1.1 is eligible only after workflow prerequisites; unresolved product choices still block exactly the tasks below.
+  - Expected: task graph and decision mappings resolve; approved policies unlock only their affected work. Dependency and runtime acceptance gates still apply, and any future reopened decision blocks its mapped tasks.
   - Rollback: documentation-only state changes; preserve recorded choices/evidence and never initialize or reset a repository as part of this review.
 
 ## Group 1 — foundation and quality gates
@@ -111,7 +111,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T2.1, T2.2. Decisions: D08.
   - Surface: future `apps/web/src/features/auth/`, member UI/routes, controlled provisioning path, `tests/e2e/auth/`.
   - Spec: [Single-business membership boundary](specs/business-access/spec.md#requirement-single-business-membership-boundary), scenarios “Authenticate an individual member”, “Reject invalid authentication”, “Create a tenant member”.
-  - Accept: approved first-Admin mechanism, individual email/password login, online first bootstrap, Admin membership management and last-Admin denial; invalid login exposes no data. Password manager/paste work; no onboarding.
+  - Accept: controlled first-Admin provisioning with secure credential setup under D08, individual email/password login, online first bootstrap, Admin membership management and last-Admin denial; invalid login exposes no data. Password manager/paste work; no public onboarding or secrets in source.
   - Check: `pnpm test:db -- access && pnpm test:e2e -- auth` (future).
   - Expected: seeded Admin/Operator journeys pass with Spanish labels and observed role denials.
   - Rollback: disable provisioning/member writes and route entry; retain identities/memberships and access audit.
@@ -120,18 +120,18 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T2.3. Decisions: D05.
   - Surface: future `apps/web/src/data/`, auth/session partition adapter, worker guards, `tests/e2e/session/`.
   - Spec: [Session and local ownership boundary](specs/business-access/spec.md#requirement-session-and-local-ownership-boundary), scenarios “Isolate a shared device”, “Recheck a revoked role”.
-  - Accept: user+business partitions for cache/outbox/cursor; approved expiry/logout/reauthentication and unsent recovery; A's queued sale invisible to B and never silently deleted. Revocation fails closed online with honest offline limitation.
+  - Accept: user+business cache/outbox/cursor partitions; first login online, offline maximum 24h after online validation; logout hides and retains unsent records for the same reauthenticated user. A's queued sale is invisible to B and never silently deleted. Audit revocation and keep forbidden pending records outside totals for explicit active-Admin incorporation approval with original-author/approver audit, never client-time authorization. Resolve unknown outcomes before linked attempts.
   - Check: `pnpm test:e2e -- session && pnpm test:db -- access` (future).
   - Expected: A→B sign-in and remote-revocation fixtures preserve isolated unsent data and deny unauthorized replay.
   - Rollback: disable offline entry if necessary, retain partitions/queues; do not purge data or weaken server checks.
 
 ## Group 3 — domain, transactional posting and sync
 
-- [ ] **T3.1 — Define exact amounts, quantities and seven effects**
+- [x] **T3.1 — Define exact amounts, quantities and seven effects**
   - Depends: T1.2. Decisions: D02, D07.
   - Surface: future `packages/domain/src/`, shared validation fixtures, server numeric adapter.
   - Spec: [Exact COP and quantity snapshots](specs/financial-records/spec.md#requirement-exact-cop-and-quantity-snapshots), scenario “Reject unsupported precision and overflow”; [operation totals](specs/financial-reporting-exchange/spec.md#requirement-operation-derived-totals-and-periods).
-  - Accept: exact decimal-string/bigint validation on both boundaries, approved quantity scale and negative/baseline rules, no silent rounding. Fixtures: `1.5` COP, `+1`, `01`, `-0`, `1e3`, signed-64 overflow, quantity product fractional COP, 8000 transfer net zero. Safe preparatory integer parser work may start before decisions; task remains incomplete.
+  - Accept: exact decimal-string/bigint validation on both boundaries; integer unit-sale quantities, up to three decimals for weight/volume purchases; signed opening/derived balances allowed with negative warning, manual/imported dated baselines distinct from profit/flow. No silent rounding. Fixtures: `1.5` COP, `+1`, `01`, `-0`, `1e3`, signed-64 overflow, quantity product fractional COP, 8000 transfer net zero. This domain task validates baseline contracts; baseline persistence/UI/import delivery remains in downstream tasks.
   - Check: `pnpm test -- money-effects && pnpm test:db -- money` (future).
   - Expected: identical client/server reject/accept fixture results, exact sums and inverse overflow rejection.
   - Rollback: disable new posting adapter; version contracts without rewriting frozen payloads or persisted money.
@@ -149,7 +149,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T3.2. Decisions: D03, D04.
   - Surface: future domain correction reducer, migration constraints/locking, correction RPC, `tests/db/corrections/`.
   - Spec: [Atomic linked correction](specs/financial-records/spec.md#requirement-atomic-linked-correction), scenarios “Correct once under retry and concurrency”, “Roll back a failed replacement”.
-  - Accept: approved permissions/date attribution; reason/actor/link retained; one target revision corrected once, retry receipt stable; 12000→15000 purchase produces net 15000; invalid replacement leaves original intact; denied edit audit distinct.
+  - Accept: active-Admin-only posted corrections with required reason/actor/link; effects use original reporting day in America/Bogota while actual correction time remains audited. One target revision corrected once, retry receipt stable; 12000→15000 purchase produces net 15000; invalid replacement leaves original intact; denied edit audit distinct.
   - Check: `pnpm test -- corrections && pnpm test:db -- corrections` (future).
   - Expected: inverse/replacement atomicity, competing correction rejection and exact report effect pass real concurrent fixtures.
   - Rollback: disable correction entry point, keep all originals/groups; never delete inverse history or revert schema destructively.
@@ -167,7 +167,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T3.2, T3.4. Decisions: none.
   - Surface: future `supabase/functions/sync/`, `apps/web/src/sync/`, `tests/e2e/sync-push/`.
   - Spec: [Frozen identity and receipt resolution](specs/offline-financial-sync/spec.md#requirement-frozen-identity-and-receipt-resolution), scenario “Resolve a lost acknowledgement”; [safe offline writes](specs/offline-financial-sync/spec.md#requirement-safe-offline-financial-writes), scenarios “Synchronize a retried sale”, “Flag unsafe acceptance”, “Protect synced history while offline”.
-  - Accept: same bytes/key/hash after timeout; transient backoff/manual launch/focus retry; expired auth pauses, permanent failures show reason/retain audit; no role-loss overwrite. Multi-tab leader races remain server-idempotent.
+  - Accept: same bytes/key/hash after timeout; transient backoff/manual launch/focus retry; expired auth pauses. Audit revoked permissions with server time; forbidden pending operations remain attention outside totals until authorized Admin resolution preserving author/approver audit. Client clocks never authorize acceptance. Definitively rejected linked attempts retain source identity; no unknown-outcome edit/role-loss overwrite. Multi-tab leader races remain server-idempotent.
   - Check: `pnpm test:db -- sync-push && pnpm test:e2e -- sync-push` (future).
   - Expected: drop response after commit and race two tabs: one sale, one receipt, no edit until resolved; rejected attempts remain visible.
   - Rollback: pause push while retaining outbox/receipts and allow diagnostic read; do not generate replacement keys for unknown outcomes.
@@ -234,7 +234,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T4.1. Decisions: D07.
   - Surface: future `apps/web/src/features/exchange/`, parsing adapter and `tests/fixtures/exchange/`.
   - Spec: [Guarded Excel exchange](specs/financial-reporting-exchange/spec.md#requirement-guarded-excel-exchange), scenario “Preview and repeat an import”; [Bounded typed Excel posting](specs/financial-reporting-exchange/spec.md#requirement-bounded-typed-excel-posting), scenario “Reject an unsafe workbook and flag copied rows”.
-  - Accept: map/preview exact typed fields including operating-expense type/description/account with documented tested byte/sheet/row/column/cell/expanded limits; reject formulas/unsafe formats/encryption/macros; retain errors/source IDs; preview cross-file source duplicates, not just file hash; no posting on preview. Prefer installed parser, assess necessary dependency only during implementation.
+  - Accept: map/preview exact typed fields including operating expenses and optional dated cash/bank opening balances, distinct from sales/profit, with tested byte/sheet/row/column/cell/expanded limits; reject formulas/unsafe formats/encryption/macros; retain errors/source IDs; preview cross-file source duplicates, not just file hash; no posting on preview. D07 integer-unit/three-decimal weight-volume rules apply. Prefer installed parser, assess necessary dependency only during implementation.
   - Check: `pnpm test -- exchange-preview` (future).
   - Expected: valid/invalid/duplicate, malformed dates, localized COP, formula and oversized fixtures classified without formula execution or server mutation.
   - Rollback: disable import selection/preview; preserve staged metadata without touching posted history.
@@ -243,7 +243,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T5.1, T3.6. Decisions: D06.
   - Surface: future import RPC/batch-row identity constraints, confirmation/resume UI, DB/e2e fixtures.
   - Spec: [Bounded typed Excel posting](specs/financial-reporting-exchange/spec.md#requirement-bounded-typed-excel-posting), scenario “Resume an interrupted confirmation”; [Guarded Excel exchange](specs/financial-reporting-exchange/spec.md#requirement-guarded-excel-exchange), scenario “Preview and repeat an import”.
-  - Accept: selected whole-batch/per-row semantics visible; server role/tenant/exact validation, stable row source/operation IDs, facts/audit/receipt atomicity; timeout resumes original outcomes; copied rows flagged while legitimate identical sales can be reviewed explicitly. Import participates in commit-safe pull ordering.
+  - Accept: confirm selected valid rows only, independently atomic per row, with visible unimported errors; server role/tenant/exact validation, stable source/operation IDs and facts/audit/receipts. Support initial baselines without duplicate effects or destructive replacement. Timeout resumes original outcomes; copied rows flagged while legitimate identical sales may be reviewed explicitly. Import participates in commit-safe pull ordering.
   - Check: `pnpm test:db -- exchange-post && pnpm test:e2e -- exchange-post` (future).
   - Expected: disconnect after committed row A/before B outcome, retry and new-file copy create no repeated A; failed row behavior matches recorded D06 decision.
   - Rollback: pause confirmation, retain batches/outcomes/receipts and resume identity; correct accepted rows only through authorized linked corrections.
@@ -272,7 +272,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Depends: T5.3, T3.7. Decisions: D09.
   - Surface: future `docs/operations.md`, deployment/monitoring configuration, isolated backup/restore evidence.
   - Spec: [Portable export and recoverable backup](specs/financial-reporting-exchange/spec.md#requirement-portable-export-and-recoverable-backup), scenario “Export safely and restore independently” (recovery half).
-  - Accept: chosen plan/host/region/retention/RPO/owner, tested full backup/Auth/schema/policy/receipts recovery in isolation, export separately verified, alerts and writer-fencing plan. Account for post-backup facts and never overwrite live history/queues; explicitly document unsent sole-device/eviction limits. No live DB reset/PITR assumption.
+  - Accept: zero-cost host/region/plan feasibility, daily backup objective, seven-day retention, separate copy and Administrator responsibility, target RPO 24h synchronized data. Prove full backup/Auth/schema/policy/receipts restoration in isolation, export separately verified, alerts and writer-fencing plan. These are objectives until proven; unsupported free-plan recovery blocks pilot, not independent local tasks. Account for newer facts/queues and sole-device unsent limits; no paid activation or live reset/PITR assumption.
   - Check: `pnpm check:release` (future) plus recorded isolated restore procedure and measured recovery result.
   - Expected: restored fixture facts/audit/receipts/roles verified, RPO/owner documented, live records/queues untouched; XLSX alone fails backup gate.
   - Rollback: stop pilot rollout/writers; use tested compatible deployment/forward repair; destructive down migrations forbidden.
@@ -315,7 +315,7 @@ Exact scenario names are listed in the owning tasks; T6.1/T6.3 verify full integ
 | Planning | P0 | VERIFIED | Current implementation evidence below; branch 01-foundation-a, no commit | D01 approved; user owns D02–D09 |
 | 1 Foundation | T1.1, T1.2 | VERIFIED | Current local unit/DB/browser/quality harnesses passed; isolation corrections rechecked | T2.1/T2.2 eligible; remote CI unverified |
 | 2 Access/shell | T2.1, T2.2, T2.3, T2.4 | IN_PROGRESS | T2.1 VERIFIED with real-role and concurrent DB proof; T2.2 isolated/PARTIAL, not integrated | Resolve T2.2 proof; D08 then D05 |
-| 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | UNSTARTED | None / absent / PENDING | D02/D07; D03/D04 for correction |
+| 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | IN_PROGRESS | T3.1 VERIFIED, shared fixtures and independent real DB parity/control suites passed | T3.2 then T3.3 eligible; shell remains deferred |
 | 4 Operations | T4.1, T4.2, T4.3, T4.4 | UNSTARTED | None / absent / PENDING | Domain/sync and D02–D04/D07 |
 | 5 Exchange | T5.1, T5.2, T5.3 | UNSTARTED | None / absent / PENDING | T4.1; D06/D07 |
 | 6 Release | T6.1, T6.2, T6.3 | UNSTARTED | None / absent / PENDING | Integrated proof; D09 |
@@ -393,3 +393,16 @@ Historical registration failures above were resolved by a later successful retry
 
 - Static-shell candidate remains outside `develop` in its dedicated worktree. Independent server-stopped control proved the initial worker could reopen offline, but also found API navigation fallback and unsafe cross-tab update activation. Correction attempts introduced build-specific caches and narrower routing, but the retained real reload regression still fails; subsequent update fixtures did not complete.
 - No completed acceptance, integrated app changes or offline-readiness claim is made. Stop further automatic corrections; needs a human decision on the retained failing proof. T2.3 remains blocked by T2.2 and D08; T2.4 also requires D05.
+
+### Approved product policies and deferred blockers (2026-10-24)
+
+- User explicitly chose to defer unresolved technical failures and advance independent tasks, presenting retained blockers after exhausting eligible work. T2.2 remains isolated/unaccepted; no automatic retry, dependency waiver or unverified shell publication.
+- D01–D09 now have recorded human policy approval; details, exact answers and memory evidence are in the central register and implementation logbook L16. Decision references above remain traceability mappings, not assertions that an approved policy is still OPEN. Historical evidence retains its original OPEN wording.
+- T3.1 may implement exact unit/three-decimal quantities, dated manual/imported baseline contracts and negative warnings; T3.2/T3.3 follow verified domain/access prerequisites. Financial UI/imports remain their own tasks. Host/region/free-backup feasibility and actual restore are still pending technical proof, not a resolved pilot gate.
+
+### T3.1 — exact money/quantity/effects acceptance
+
+- Status: VERIFIED. Inline additive domain/SQL validation, shared JSON fixtures, explicit disposable money suite and exact-money documentation. D02/D07 policies are approved; baseline validation supports manual/import provenance without treating it as sales/profit. No baseline persistence/UI/import posting is claimed.
+- RED observed for missing numeric domain and unsupported money DB suite. GREEN: four domain fixtures cover signed-64 parsing, positive inputs, exact quantities/products, seven effects, 21000 profit/27000 flow and dated baseline contracts; eleven runner/plan tests pass. Full actual-workspace lint, types, 18 unit tests, build, format and plan passed.
+- Independent verifier reran money, harness and access against real disposable PostgreSQL; parity/boundaries/NULL rejection and concurrent access controls passed. Retained SQL NULL regression. Scratch app-wide types were unavailable due dependency-symlink assembly; direct domain compilation and actual-workspace types passed. No resources remain running.
+- Rollback: disable new numeric callers or forward-repair additive SQL; no stored financial data is changed by these functions. Risk: shared numeric contracts and DB runner. Native RDD remains disabled; remote CI/pilot/recovery remain unverified. T3.2 is eligible after this unit.

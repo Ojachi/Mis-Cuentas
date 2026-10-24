@@ -92,6 +92,12 @@ test('DB runner accepts the explicit access suite', () => {
   expect(result.status).toBe(0);
 });
 
+test('DB runner accepts the explicit money suite with shared boundary fixtures', () => {
+  const result = runDb('money');
+  expect(result.status).toBe(0);
+  expect(calls().some((call) => call.includes('query'))).toBe(true);
+});
+
 test('DB runner cleans an owned partial start while preserving its failure', () => {
   const result = runDb('harness');
 
@@ -193,6 +199,22 @@ const planFixture = () => {
   cpSync('scripts/check-plan.mjs', join(fixture, 'scripts/check-plan.mjs'));
   return fixture;
 };
+
+test('plan gate accepts recorded approvals without completing dependent tasks', () => {
+  const fixture = planFixture();
+  const designPath = join(
+    fixture,
+    'openspec/changes/hot-dog-finance-mvp/design.md',
+  );
+  const source = readFileSync(designPath, 'utf8');
+  writeFileSync(designPath, source.replaceAll('| OPEN |', '| APPROVED |'));
+  const result = spawnSync(process.execPath, ['scripts/check-plan.mjs'], {
+    cwd: fixture,
+    encoding: 'utf8',
+  });
+  expect(result.status).toBe(0);
+  expect(result.stdout).toContain('24 tasks, 9 decisions');
+});
 
 test('plan gate rejects broken local links and anchors while ignoring fenced history', () => {
   const fixture = planFixture();

@@ -33,7 +33,7 @@ None — no existing OpenSpec capabilities exist.
 
 The earlier architecture-neutral proposal is now refined by [design.md](design.md): proposed React 19/TypeScript/Vite PWA, Dexie/IndexedDB and Supabase Auth/Postgres/RLS/functions. This selection is a planning proposal, not a proven offline/sync implementation. Validate it through [tasks.md](tasks.md), starting with workflow prerequisites, auth/tenant foundation and the minimal offline shell before financial offline E2E. Preserve the user-selected `auto-chain` / `feature-branch-chain` with `develop` as integration/tracker.
 
-Readiness is conditional: [D01 is approved and D02–D09 remain OPEN](design.md#decision-register). The user explicitly included operating expenses in the MVP. P0 routes remaining decisions; safe scaffold/auth schema/static shell work can proceed after workflow prerequisites, while affected policy work remains blocked. No blanket approval, runtime evidence or fully implementation-ready claim is implied.
+Readiness remains evidence-dependent: [D01–D09 have human-approved product policies](design.md#decision-register), including optional imported opening data and a zero infrastructure budget. Approval unlocks affected policy work but does not complete tasks or authorize remote execution. The isolated offline-shell failure is deferred; independent exact-money/posting/correction tasks may proceed while dependencies and acceptance remain enforced.
 
 ## Affected Areas
 
@@ -57,7 +57,7 @@ Verify portable export and full backup/restore separately before rollout. XLSX i
 ## Dependencies
 
 - Exact technical contracts in [design.md](design.md), matching specifications and observed implementation proof in [tasks.md](tasks.md).
-- D01 is approved: include operating expenses. OPEN D02–D09: opening baseline/negative balances; calendar/correction dates; correction permissions; offline/shared-device/logout; import atomicity; quantity scale; first Admin provisioning; pilot hosting/backup RPO/owner. The central register maps each to blocked task IDs.
+- D01–D09 policies are approved in the central register: expenses, manual/imported opening balances with negative warnings, Colombia calendar, Admin corrections, bounded offline sessions/audited revoked-user resolution, selected valid-row import, quantity scales, controlled first Admin, and free daily/7-day/Admin-owned backup objectives. Actual hosting/region and recovery evidence remain pending; no pilot guarantee is inferred.
 - The earlier no-Git/no-scaffold observation is historical. Current repository/tooling evidence lives in [tasks.md](tasks.md). Historical missing `sdd-attempt` support must be rechecked if an SDD execution route is selected; direct implementation does not invoke an SDD phase or claim that tooling issue is fixed.
 
 ## Success Criteria

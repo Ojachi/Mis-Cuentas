@@ -20,7 +20,7 @@ The MVP SHALL NOT automate inventory, customers, invoices, receipts, or multi-cu
 
 ### Requirement: Exact COP and quantity snapshots
 
-Money MUST use exact whole-COP integers (`MoneyCop = bigint`) and canonical decimal strings at JSON/API boundaries, consistent with [exact money and quantities](../../design.md#exact-money-and-quantities). Browser and server MUST reject malformed signs, unsupported decimals, out-of-range signed 64-bit amounts and overflow in products/sums/inverses, without floating-point money or silent rounding. Entered transaction amounts, prices, costs and quantities MUST be positive. Quantities MUST be exact; supported scale is OPEN D07 and fractional-COP products MUST be rejected. Zero observations and signed derived deltas/balances are separate from positive operation inputs; baseline/negative-balance policy is OPEN D02.
+Money MUST use exact whole-COP integers (`MoneyCop = bigint`) and canonical decimal strings at JSON/API boundaries, consistent with [exact money and quantities](../../design.md#exact-money-and-quantities). Browser and server MUST reject malformed signs, decimals, signed-64 overflow and unrepresentable products/sums/inverses without floating point or silent rounding. Entered amounts, prices, costs and quantities MUST be positive. Approved D07 requires integer unit-sale quantities and up to three decimal places for weight/volume purchases; fractional-COP products MUST reject. Approved D02 allows Administrator-defined cash/bank opening balances and effective date, entered manually or imported, and negative resulting balances with warning. Opening balances MUST NOT become sales/profit, and unknown opening funds MUST NOT silently default to zero.
 
 Sales MUST snapshot item name, exact quantity, actual unit price (including visible override) and line total; purchases MUST snapshot supplier, item description, quantity, unit cost and line total with selected account. Catalog changes MUST NOT rewrite either history. A mandatory price-override reason is not established by this specification.
 
@@ -31,7 +31,7 @@ Sales MUST snapshot item name, exact quantity, actual unit price (including visi
 
 ### Requirement: Atomic linked correction
 
-Accepted originals MUST remain immutable. Void MUST append a linked exact inverse; replacement MUST append inverse plus validated replacement atomically with audit and receipt. Retain target/replacement/group identities, reason, actor and timestamps. Reports MUST include original and inverse as net zero, then replacement effects. Hard delete and in-place updates MUST be denied and audited distinctly from successful corrections. Permissions are OPEN D04 and period attribution is OPEN D03; neither may be silently inferred.
+Accepted originals MUST remain immutable. Void MUST append a linked exact inverse; replacement MUST append inverse plus validated replacement atomically with audit and receipt. Retain target/replacement/group identities, required reason, actor and timestamps. Original and inverse net to zero before replacement effects. Hard delete and in-place updates MUST be denied and audited distinctly. Approved D04 allows only active Administrators to correct posted history. Approved D03 attributes corrections to the original movement's reporting day in America/Bogota while recording actual correction time; historical derived reports can change, not retained cutoff observations.
 
 #### Scenario: Correct once under retry and concurrency
 - GIVEN an accepted purchase of 12000 COP and a permitted replacement of 15000 COP
@@ -45,7 +45,7 @@ Accepted originals MUST remain immutable. Void MUST append a linked exact invers
 
 ### Requirement: Retained reconciliation observation
 
-Reconciliation MUST retain observed amount/time, expected snapshot, difference, account, period, actor, nonzero-difference note and calculation cutoff (confirmed watermark plus included local IDs if provisional). It MUST NOT post money. Later accepted facts/corrections MUST NOT invisibly rewrite the retained snapshot; a new current comparison MUST be separately labeled or a linked observation appended. D02 and D03 gate baseline/calendar behavior.
+Reconciliation MUST retain observed amount/time, expected snapshot, difference, account, period, actor, nonzero-difference note and calculation cutoff (confirmed watermark plus included local IDs if provisional). It MUST NOT post money. Later accepted facts/corrections MUST NOT invisibly rewrite the retained snapshot; a new current comparison MUST be separately labeled or a linked observation appended. Baseline/calendar behavior MUST follow approved D02 and D03, including negative warnings and original-day correction attribution.
 
 #### Scenario: Preserve a prior cutoff
 - GIVEN expected cash 328000, observed cash 326000 and a retained cutoff

@@ -1,6 +1,6 @@
 # Finance MVP implementation
 Objective: implement the approved finance MVP and its resumable OpenSpec task plan. Branch: develop; initial snapshot 06feca1 is published to Ojachi/Mis-Cuentas on main and develop.
-Route: direct ODD implementation; existing OpenSpec artifacts are requirements, not an invocation of an SDD phase. Delivery: commit and push each verified task to develop; reserve main for stable promotion, without per-feature branches or PRs. Test runner: Vitest 5.0.5 plus isolated DB/browser harnesses; T1.2 native review remains blocked.
+Route: direct ODD implementation; existing OpenSpec artifacts are requirements, not an invocation of an SDD phase. Delivery: commit and push each verified task to develop; reserve main for stable promotion, without per-feature branches or PRs. Test runner: Vitest 5.0.5 plus isolated DB/browser harnesses. Native RDD reviews are disabled for this repository by explicit user instruction; functional verification remains required.
 
 ## Specs
 
@@ -13,7 +13,7 @@ Route: direct ODD implementation; existing OpenSpec artifacts are requirements, 
 
 - W0 | S1–S3 | inline | VERIFIED | D01 propagated to scope, financial records/reporting/sync, task fixtures and visual reference note; P0 state recorded. Commit: absent.
 - W1 / T1.1 | S1,S3 | inline | VERIFIED | Buildable React/TypeScript/Vite workspace, domain package import, Spanish nonfinancial scaffold and quality scripts. RED missing App observed; GREEN 1 test/build/types/lint/format/HTTP smoke. Independent targeted recheck resolved all observations. Risk: item 5 (new dependencies and build configuration). Commit: absent.
-- W2 / T1.2 | S1,S3 | delegated | IN_PROGRESS / PARTIAL | Previous local DB harness read root Supabase configuration and did not preserve cleanup on child failure. Corrective isolated-run namespace, cleanup and link-gate recheck in progress. Risk: items 1 (existing DB loss) and 5 (test/dependency/CI setup). Commit: absent.
+- W2 / T1.2 | S1,S3 | delegated | VERIFIED | Isolation and partial-start cleanup corrections independently rechecked; current unit, disposable DB, browser and quality checks pass. Remote CI remains unverified. Risk: items 1 (existing DB loss) and 5 (test/dependency/CI setup). Implementation: 06feca1; closure: this documentation commit.
 - W3 / T2.1–T2.4 | S1,S3 | inline | UNSTARTED | Access, tenant boundaries and minimal offline shell. Blockers include D08 then D05. Commit: absent.
 - W4 / T3.1–T3.7 | S1–S3 | inline | UNSTARTED | Exact financial domain, server posting, corrections and offline synchronization. Blockers include D02,D03,D04,D07. Commit: absent.
 - W5 / T4.1–T4.4 | S1–S3 | inline | UNSTARTED | Operational forms including expenses, history, reconciliation and reports. Commit: absent.
@@ -22,7 +22,7 @@ Route: direct ODD implementation; existing OpenSpec artifacts are requirements, 
 
 The existing plan owns individual task acceptance/dependencies; this logbook records implementation intent and current evidence without creating another competing task specification. Route evidence: W0/W1 were inline. W2 used one bounded writer for the accumulated-context handoff. Future independent substantial units may use isolated detached worktrees; never run parallel writers in the same tree or let workers own shared Git integration. A fresh read-only verifier is required for named high-risk surfaces after their own checks. Commits and pushes to develop are authorized by S4; PRs, deployment and stable promotion to main are not.
 
-Forecast: remaining authored lines are unknown. Keep coherent task commits with their tests/docs; the earlier PR-chain plan is superseded by direct develop delivery. T2.1 (tenant/role foundation) and T2.2 (offline shell) have disjoint candidate edit surfaces but both depend on T1.2; do not call them ready or launch writers while that prerequisite remains blocked. Shared manifests, lockfiles, runners and progress documents have one owner.
+Forecast: remaining authored lines are unknown. Keep coherent task commits with their tests/docs; the earlier PR-chain plan is superseded by direct develop delivery. T2.1 (tenant/role foundation) and T2.2 (offline shell) are now eligible after T1.2 closure. Parallel implementation uses isolated worktrees with separate edit surfaces; parent owns shared manifests, lockfiles, runners, progress documents and integration.
 
 ## Log
 
@@ -117,3 +117,14 @@ Next development unit: T1.2 isolated verification harness, preserving the OPEN D
 - T1.2 remains IN_PROGRESS/PARTIAL. Its prior technical corrections are resolved, but its native review blocker is preserved; safe-looking preparation is not task completion. D02–D09 remain OPEN and block only their affected work. Do not infer product decisions or candidate-specific native consent from S4.
 - Current read-only checks found Gentle AI 4.2.0 and review enabled by global preference. GitHub Actions is enabled and workflow CI is active, but no runs were returned; remote CI is NOT VERIFIED. No native recovery/decline/retry, configuration change or product implementation occurred.
 - Engram persistence is pending: the latest save could not resolve an authoritative OpenCode runtime session. Local files remain authoritative; old full mirrors are stale. Do not invent or register a session identity to work around the failure.
+
+### L13 — resumed implementation and T1.2 closure (2026-10-24)
+
+"no entonces no revises, sabes que descativa esa revisionn como tla, no la usemosmmas en este proyecto"
+
+"ok ahora si sigue con todas las tareas"
+
+- Explicit clone-local RDD disable was executed and read back as off; global preference and old authority were preserved. No native review is required for task closure under the current user preference. Functional verification and named high-risk independent checks remain applicable.
+- Engram write and full readback succeeded in the fresh session (observation 178); later state and review-disable preference were also persisted. Earlier persistence failures are historical.
+- Fresh Terra reconciliation observed format check, lint, typecheck, build, all 10 unit tests, plan validation (63 links/24 tasks/9 decisions/43 headings), harness self-check, disposable DB harness and one Chromium harness test passing. Parent spot-check: check:plan passed. Existing independent targeted cleanup validation remains the final correction proof; no new review ceremony was launched.
+- T1.2 is VERIFIED at local harness scope. Remote CI has not been verified; release, pilot and recovery evidence remain pending, not acceptance claimed by this closure. D02–D09 remain OPEN. Next independent eligible units: T2.1 and T2.2; rollback remains limited to new harness wiring, never stored business data.

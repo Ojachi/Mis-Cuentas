@@ -78,7 +78,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Expected: all four commands exit zero with production bundle; shell runtime still pending T2.2.
   - Rollback: remove only unused scaffold/config from this unit before data exists; no schema or user data reset.
 
-- [ ] **T1.2 — Establish runnable isolated verification**
+- [x] **T1.2 — Establish runnable isolated verification**
   - Depends: T1.1. Decisions: none.
   - Surface: future root scripts, Vitest/Playwright config, `tests/`, CI config and test prerequisites documentation.
   - Spec: [atomic persistence](specs/offline-financial-sync/spec.md#requirement-atomic-persistence-and-complete-pull); supports all later scenario checks.
@@ -313,7 +313,7 @@ Exact scenario names are listed in the owning tasks; T6.1/T6.3 verify full integ
 | Group | Task IDs | Status | Last verified task/branch/evidence | Next gate |
 |---|---|---|---|---|
 | Planning | P0 | VERIFIED | Current implementation evidence below; branch 01-foundation-a, no commit | D01 approved; user owns D02–D09 |
-| 1 Foundation | T1.1, T1.2 | IN_PROGRESS / PARTIAL | T1.1 scaffold passed; T1.2 corrects unsafe DB runner isolation and plan-link validation | Recheck T1.2 before T2.1/T2.2 |
+| 1 Foundation | T1.1, T1.2 | VERIFIED | Current local unit/DB/browser/quality harnesses passed; isolation corrections rechecked | T2.1/T2.2 eligible; remote CI unverified |
 | 2 Access/shell | T2.1, T2.2, T2.3, T2.4 | UNSTARTED | None / absent / PENDING | T1.2; D08 then D05 |
 | 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | UNSTARTED | None / absent / PENDING | D02/D07; D03/D04 for correction |
 | 4 Operations | T4.1, T4.2, T4.3, T4.4 | UNSTARTED | None / absent / PENDING | Domain/sync and D02–D04/D07 |
@@ -374,3 +374,10 @@ Historical registration failures above were resolved by a later successful retry
 - IN_PROGRESS/PARTIAL; all 5 generic blockers resolved. Batch 1: DB ownership/root reset, extra args, query cleanup, CI npm cache, plan links. Batch 2: only the remaining partial-start cleanup. Targeted mock start creates owned resource/exits 41; same-workdir stop removes it; foreign/root-config hashes unchanged and 41 preserved. Mock only, not DB-failure hardware; prior writer separately observed authenticated role/`auth.uid()`/transaction and Chromium passed once.
 - Parent `format:check && typecheck && test && build && check:plan` PASS: 3 files/10 tests, 63 links, 24 tasks, 9 decisions, 43 headings; Docker `name=micu-t12`: none. CI NOT RUN; release BLOCKED for financial/manual-pilot/backup-restore proof; no T2+. D01 APPROVED, D02-D09 OPEN. W1 review `review-7ed0c3083e0992f7` BURNED/no findings; do not resume.
 - Native STATUS/offered START: consent v3 HIGH, separate W2, 19 paths/893 lines, risk/resilience/readability/reliability; baseline `ab689e94aff15c8bc3013cddf69a9205256a1779`, candidate `c12e1e843bf8f2b67bea083fe7475915cdb92d07`, target `50839fcef5a57ccc452240ba5bdd1e6f0c5d35eda0bf4fdafa52855199594c46`. Required consent pending: no result/approval/receipt, never infer from W1. After no T1.2 containers, parent removed 79 marked `/tmp/opencode` and 16 marked legacy `/tmp` fixtures; caches/images kept, repo unaffected; do not recreate/delete scratch.
+
+### T1.2 — local acceptance closure (2026-10-24)
+
+- Status: VERIFIED. Implementation is included in published `06feca1`; current branch is `develop`. This documentation unit records closure, not a new implementation or review approval.
+- User explicitly disabled native RDD reviews for this repository; readback confirmed clone-local off. Existing authority is preserved and is no longer a workflow prerequisite. Functional checks remain required.
+- Current observed checks: format check, lint, typecheck, full Vitest (3 files/10 tests), build, check:plan (63 links/24 tasks/9 decisions/43 headings), harness:selfcheck, disposable DB harness and Chromium harness (1 test), all PASS. Parent independently reran check:plan successfully. Prior independent targeted partial-start cleanup proof remains valid for unchanged runner bytes.
+- Remote CI NOT VERIFIED; release/pilot/recovery remain pending. This is harness acceptance only, not financial, access or offline functionality. T2.1 and T2.2 may proceed; D02–D09 continue blocking their affected tasks. Rollback: harness-only wiring, no stored-data reset.

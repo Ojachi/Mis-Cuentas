@@ -55,6 +55,7 @@ const command = args.find((argument) => ['start', 'stop', 'query'].includes(argu
 if (command === 'start' && process.env.SUPABASE_FAKE_OWNED_RESOURCE) appendFileSync(process.env.SUPABASE_FAKE_OWNED_RESOURCE, 'owned');
 if (command === 'stop' && process.env.SUPABASE_FAKE_OWNED_RESOURCE) unlinkSync(process.env.SUPABASE_FAKE_OWNED_RESOURCE);
 if (command === process.env.SUPABASE_FAKE_FAIL) process.exit(Number(process.env.SUPABASE_FAKE_EXIT));
+if (args.at(-1)?.endsWith('-b.sql')) process.exit(44);
 `,
 );
 chmodSync(join(fakeBin, 'supabase'), 0o755);
@@ -83,6 +84,12 @@ test('DB runner rejects extra arguments before invoking infrastructure', () => {
 
   expect(result.status).toBe(1);
   expect(calls()).toEqual([]);
+});
+
+test('DB runner accepts the explicit access suite', () => {
+  const result = runDb('access');
+
+  expect(result.status).toBe(0);
 });
 
 test('DB runner cleans an owned partial start while preserving its failure', () => {

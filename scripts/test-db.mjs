@@ -1,5 +1,6 @@
 import {
   copyFileSync,
+  cpSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -7,13 +8,13 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { randomUUID } from 'node:crypto';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const suite = process.argv[2];
-if (process.argv.length !== 3 || suite !== 'harness') {
-  console.error('Expected exactly one DB suite: harness');
+if (process.argv.length !== 3 || !['harness', 'access'].includes(suite)) {
+  console.error('Expected exactly one DB suite: harness or access');
   process.exitCode = 1;
 } else {
   const root = resolve(import.meta.dirname, '..');
@@ -63,6 +64,11 @@ sql_paths = ["./seed.sql"]
     mkdirSync(supabaseDir);
     writeFileSync(configPath, config);
     copyFileSync(join(root, 'supabase', 'seed.sql'), seedPath);
+    cpSync(
+      join(root, 'supabase', 'migrations'),
+      join(supabaseDir, 'migrations'),
+      { recursive: true },
+    );
     if (readFileSync(configPath, 'utf8') !== config) {
       throw new Error(`Unexpected generated Supabase config: ${configPath}`);
     }
@@ -75,14 +81,66 @@ sql_paths = ["./seed.sql"]
       '-x',
       'gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor',
     ]);
-    command([
-      ...scoped,
-      'db',
-      'query',
-      '--local',
-      '--file',
-      join(root, 'tests', 'db', 'harness.sql'),
-    ]);
+    const query = (file) =>
+      command([
+        ...scoped,
+        'db',
+        'query',
+        '--local',
+        '--file',
+        join(root, 'tests', 'db', file),
+      ]);
+
+    if (suite === 'harness') {
+      query('harness.sql');
+    } else {
+      query('access/setup.sql');
+      query('access/bypass-probe.sql');
+      query('access/anon-probe.sql');
+
+      const concurrentQuery = (file) =>
+        new Promise((resolveQuery, rejectQuery) => {
+          const child = spawn(
+            'supabase',
+            [
+              ...scoped,
+              'db',
+              'query',
+              '--local',
+              '--file',
+              join(root, 'tests', 'db', 'access', file),
+            ],
+            { stdio: 'inherit' },
+          );
+          child.on('error', rejectQuery);
+          child.on('close', (status) => {
+            if (status === 0) resolveQuery();
+            else
+              rejectQuery(
+                new Error(`concurrent ${file} failed with exit ${status ?? 1}`),
+              );
+          });
+        });
+
+      for (const [kind, first, second] of [
+        ['deactivation', 'concurrent-a.sql', 'concurrent-b.sql'],
+        ['demotion', 'demote-a.sql', 'demote-b.sql'],
+      ]) {
+        const concurrent = await Promise.allSettled([
+          concurrentQuery(first),
+          concurrentQuery(second),
+        ]);
+        if (
+          concurrent.filter((result) => result.status === 'rejected').length !==
+          1
+        ) {
+          throw new Error(
+            `expected exactly one concurrent last-Admin ${kind} to fail`,
+          );
+        }
+      }
+      query('access/assert.sql');
+    }
   } catch (error) {
     primaryError = error;
   }

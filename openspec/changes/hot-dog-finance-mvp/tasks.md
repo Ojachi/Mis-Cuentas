@@ -89,7 +89,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
 
 ## Group 2 — auth, tenancy and minimal offline shell
 
-- [ ] **T2.1 — Enforce tenant and role foundation**
+- [x] **T2.1 — Enforce tenant and role foundation**
   - Depends: T1.2. Decisions: none.
   - Surface: future `supabase/migrations/`, `tests/db/access/`, auth adapters and typed contracts; synthetic identities only.
   - Spec: [Single-business membership boundary](specs/business-access/spec.md#requirement-single-business-membership-boundary), scenarios “Deny a boundary violation” and “Create a tenant member”.
@@ -314,7 +314,7 @@ Exact scenario names are listed in the owning tasks; T6.1/T6.3 verify full integ
 |---|---|---|---|---|
 | Planning | P0 | VERIFIED | Current implementation evidence below; branch 01-foundation-a, no commit | D01 approved; user owns D02–D09 |
 | 1 Foundation | T1.1, T1.2 | VERIFIED | Current local unit/DB/browser/quality harnesses passed; isolation corrections rechecked | T2.1/T2.2 eligible; remote CI unverified |
-| 2 Access/shell | T2.1, T2.2, T2.3, T2.4 | UNSTARTED | None / absent / PENDING | T1.2; D08 then D05 |
+| 2 Access/shell | T2.1, T2.2, T2.3, T2.4 | IN_PROGRESS | T2.1 VERIFIED with real-role and concurrent DB proof; T2.2 isolated/PARTIAL, not integrated | Resolve T2.2 proof; D08 then D05 |
 | 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | UNSTARTED | None / absent / PENDING | D02/D07; D03/D04 for correction |
 | 4 Operations | T4.1, T4.2, T4.3, T4.4 | UNSTARTED | None / absent / PENDING | Domain/sync and D02–D04/D07 |
 | 5 Exchange | T5.1, T5.2, T5.3 | UNSTARTED | None / absent / PENDING | T4.1; D06/D07 |
@@ -381,3 +381,15 @@ Historical registration failures above were resolved by a later successful retry
 - User explicitly disabled native RDD reviews for this repository; readback confirmed clone-local off. Existing authority is preserved and is no longer a workflow prerequisite. Functional checks remain required.
 - Current observed checks: format check, lint, typecheck, full Vitest (3 files/10 tests), build, check:plan (63 links/24 tasks/9 decisions/43 headings), harness:selfcheck, disposable DB harness and Chromium harness (1 test), all PASS. Parent independently reran check:plan successfully. Prior independent targeted partial-start cleanup proof remains valid for unchanged runner bytes.
 - Remote CI NOT VERIFIED; release/pilot/recovery remain pending. This is harness acceptance only, not financial, access or offline functionality. T2.1 and T2.2 may proceed; D02–D09 continue blocking their affected tasks. Rollback: harness-only wiring, no stored-data reset.
+
+### T2.1 — tenant and role foundation acceptance (2026-10-24)
+
+- Status: VERIFIED in isolated access worktree based on `50be882`, integrated by parent as this task's cohesive commit. Files: additive access migration, typed roles/export, `tests/db/access/` real-role/concurrent fixtures, DB runner access-suite extension, regression tests and `docs/access.md`.
+- Observed RED: no businesses relation before migration; later independent orphan-creation probe failed before correction. GREEN: linked Auth identities, single-business membership, foreign tenant/Operator denials, Admin positive controls, direct-write denial, same-data hashes after rejected commands, anonymous helper denial and identity-bound helper results. Real concurrent deactivation and demotion each retain one active Administrator.
+- Independent read-only verification found and then rechecked the original helper-disclosure/orphan-membership blockers. All original blockers passed the targeted real-DB recheck. Full local candidate checks passed: lint, format, types, build, 4 Vitest files/12 tests, disposable access and existing harness DB suites; focused runner 9 tests and domain 1 test. Native RDD remained disabled; no receipt is claimed.
+- Scope limits: no public signup, first-Admin policy, account switching, future receipt/table authorization or app authentication journey. D08 remains OPEN. Remote CI and deployment NOT VERIFIED. Risk: authorization, concurrency and runner changes. Rollback: disable RPC exposure/forward repair only, no destructive schema or stored-data rollback.
+
+### T2.2 — isolated partial implementation, not accepted (2026-10-24)
+
+- Static-shell candidate remains outside `develop` in its dedicated worktree. Independent server-stopped control proved the initial worker could reopen offline, but also found API navigation fallback and unsafe cross-tab update activation. Correction attempts introduced build-specific caches and narrower routing, but the retained real reload regression still fails; subsequent update fixtures did not complete.
+- No completed acceptance, integrated app changes or offline-readiness claim is made. Stop further automatic corrections; needs a human decision on the retained failing proof. T2.3 remains blocked by T2.2 and D08; T2.4 also requires D05.

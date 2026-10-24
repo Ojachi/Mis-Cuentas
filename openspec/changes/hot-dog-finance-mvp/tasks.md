@@ -6,21 +6,21 @@ Implementation has been authorized. Current evidence and statuses are recorded b
 
 Read [proposal](proposal.md), [access](specs/business-access/spec.md), [records](specs/financial-records/spec.md), [sync](specs/offline-financial-sync/spec.md), [reporting/exchange](specs/financial-reporting-exchange/spec.md), and [design](design.md) before choosing work. P0 resolves workflow prerequisites and records product gates; it does NOT require all product choices to be settled before safe foundation starts. The [decision register](design.md#decision-register) is the single policy source.
 
-## Review workload and branch chain
+## Review workload and delivery
 
 | Field | Forecast / rule |
 |---|---|
 | Prior 2400–3200 changed lines | Historical guess, not measured; insufficient evidence to keep as a bound |
 | Current forecast | High risk of substantially exceeding that guess; app, DB, migrations, fixtures and browser tests are absent; numeric total unknown until scaffold/proof |
 | Review budget | About 400 authored additions + deletions per child PR, about 60 minutes review; not a feature acceptance criterion |
-| Delivery strategy | `auto-chain` (user selected) |
-| Chain strategy | `feature-branch-chain` (user selected) |
-| Integration/tracker | `develop`; future draft/no-merge tracker targets `main` |
+| Delivery strategy | Direct commits and pushes to `develop` after each verified task (latest user instruction) |
+| Chain strategy | No per-feature branches or PRs for the current solo workflow; earlier chain selection is historical |
+| Integration/tracker | `develop` for development; `main` reserved for stable promotion |
 | Work grouping | Six groups below; 23 implementation units plus P0, not six forced PRs |
 
-Future chain: `main <- develop (draft tracker) <- 01-foundation-a <- 01-foundation-b <- 02-access-a <- ... <- 06-release-b`. First child targets `develop`; every later child branches from and targets its immediate predecessor, including across group boundaries. Merge reviewed children back through parents, integrate the first child into `develop`, then promote through the tracker only after release gates. Every child records start/end, dependencies, current-PR dependency diagram, follow-ups, out-of-scope, exact diff size, verification and rollback. No branch, commit or PR is created by this plan.
+Initial snapshot `06feca1` is published on both `main` and `develop`; further authorized implementation goes to `develop`, leaving `main` unchanged until stable promotion is explicitly authorized. The earlier feature-branch chain is superseded, not a prerequisite for new work. Independent agents may use isolated detached worktrees without publishing feature branches; parent integration owns shared files and Git operations. Record task scope, dependencies, proof and rollback before each commit/push.
 
-Each task is a cohesive candidate work unit with its fixtures/docs. On first implementation estimate each unit, then make ONE honest slicing pass into additional `-a/-b/...` child slices if needed; retain task IDs and assign proof per slice. Never compress code/tests to hit 400 lines. If no coherent split fits, report measured overage and request `size:exception`; do not silently approve it. Do not impose a six-slice ceiling.
+Each task is a cohesive work unit with its fixtures/docs. About 400 authored lines is a reviewability heuristic, not a task acceptance gate or a reason to omit tests or create unwanted PRs. Retain task IDs, assign proof and report actual size. Do not compress code/tests to fit the heuristic. Never mark a task complete while acceptance, an explicit dependency or a product decision remains blocked.
 
 ## Check interface
 

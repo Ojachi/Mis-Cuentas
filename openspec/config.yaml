@@ -1,0 +1,55 @@
+schema: spec-driven
+project: micu
+persistence: hybrid
+strict_tdd: false
+
+context: |
+  Workspace contains SDD automation metadata only; no application source or build manifest was detected.
+  Tech stack: undetected.
+  Architecture: undetected.
+  Testing, linting, type checking, and formatting: unavailable.
+  Delivery strategy: auto-chain; review budget: 400 changed lines.
+
+testing:
+  strict_tdd: false
+  detected: "2026-10-15"
+  test_runner:
+    available: false
+    framework: null
+    command: null
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage:
+    available: false
+    command: null
+  quality_tools:
+    linter: null
+    type_checker: null
+    formatter: null
+
+rules:
+  proposal:
+    - Include a rollback plan for risky changes.
+  specs:
+    - Use Given/When/Then scenarios.
+    - Use RFC 2119 keywords for normative requirements.
+  design:
+    - Document architecture decisions and rationale.
+    - Include sequence diagrams for complex flows.
+  tasks:
+    - Group work by phase with hierarchical numbering.
+    - Keep each task completable in one session.
+  apply:
+    guidelines:
+      - Establish the implementation stack and test tooling before application work.
+      - Follow project conventions once they exist.
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive delta specifications.

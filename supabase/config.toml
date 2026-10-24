@@ -1,0 +1,10 @@
+project_id = "micu-t12-harness"
+
+[db]
+port = 54342
+shadow_port = 54340
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]

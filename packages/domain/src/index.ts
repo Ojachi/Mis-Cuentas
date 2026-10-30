@@ -11,3 +11,4 @@ export {
   type MoneyCop,
 } from './money-effects';
 export { canonicalPosting } from './posting';
+export { correctionEffects, type FinancialEffects } from './corrections';

@@ -145,7 +145,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Expected: one accepted effect after repeated replay, zero partial effects under injected failure; table-specific cross-tenant reads/writes and receipt probes against implemented surfaces are denied without exposure or mutation, with permitted same-tenant controls proving the surfaces exist.
   - Rollback: disable new writer/RPC, forward repair schema only; retain facts/audit/receipts.
 
-- [ ] **T3.3 — Add atomic correction primitives**
+- [x] **T3.3 — Add atomic correction primitives**
   - Depends: T3.2. Decisions: D03, D04.
   - Surface: future domain correction reducer, migration constraints/locking, correction RPC, `tests/db/corrections/`.
   - Spec: [Atomic linked correction](specs/financial-records/spec.md#requirement-atomic-linked-correction), scenarios “Correct once under retry and concurrency”, “Roll back a failed replacement”.
@@ -315,7 +315,7 @@ Exact scenario names are listed in the owning tasks; T6.1/T6.3 verify full integ
 | Planning | P0 | VERIFIED | Current implementation evidence below; branch 01-foundation-a, no commit | D01 approved; user owns D02–D09 |
 | 1 Foundation | T1.1, T1.2 | VERIFIED | Current local unit/DB/browser/quality harnesses passed; isolation corrections rechecked | T2.1/T2.2 eligible; remote CI unverified |
 | 2 Access/shell | T2.1, T2.2, T2.3, T2.4 | IN_PROGRESS | T2.1 VERIFIED with real-role and concurrent DB proof; T2.2 isolated/PARTIAL, not integrated | Resolve T2.2 proof; D08 then D05 |
-| 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | IN_PROGRESS | T3.1/T3.2 VERIFIED; exact domain and atomic tenant-scoped posting proven independently | T3.3 eligible; shell-dependent access/storage still deferred |
+| 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | IN_PROGRESS | T3.1/T3.2/T3.3 VERIFIED, including targeted correction identity/auth/hash recheck | T3.4 requires T2.4, downstream of deferred T2.2 |
 | 4 Operations | T4.1, T4.2, T4.3, T4.4 | UNSTARTED | None / absent / PENDING | Domain/sync and D02–D04/D07 |
 | 5 Exchange | T5.1, T5.2, T5.3 | UNSTARTED | None / absent / PENDING | T4.1; D06/D07 |
 | 6 Release | T6.1, T6.2, T6.3 | UNSTARTED | None / absent / PENDING | Integrated proof; D09 |
@@ -413,3 +413,11 @@ Historical registration failures above were resolved by a later successful retry
 - Independent functional verdict PASS for S1/S3/S5/S6. Real disposable PostgreSQL proved all seven operations, actual two-session business-lock contention with one identical committed outcome, owner-only second-transfer-leg failure rolling back all four tables, cross-tenant and anonymous denials, table-specific direct insert/update/delete denials, malformed required-field rejection with full-state hashes unchanged, and Unicode/escape/hash parity. Positive tenant controls prove implemented surfaces exist.
 - Actual project final checks passed lint/types/22 unit tests/build/format/plan and real posting suite. Independent verifier also passed old harness/access/money DB suites, runner 12 tests and posting 3 tests. Scratch format limitation is explicitly separate; root checks passed. All owned DB resources stopped.
 - No financial screens, correction/sync/import/pilot completion or remote deployment is claimed. Native RDD remains off. Risk: persisted financial facts, authorization, contract/hash, concurrency and runner. Rollback disables entry points/forward-repairs only; no stored history deletion. T3.3 now eligible.
+
+### T3.3 — atomic linked correction acceptance
+
+- Status: VERIFIED. Additive correction groups/durable outcomes, Admin-only RPC, required reason, immutable inverse/replacement facts, original-day attribution and actual correction actor/time. Domain reducer reuses exact add/inverse primitives. Same-tenant Operator denial retains distinct audit without money effects; foreign/anon calls disclose no target/receipt, direct SQL DML is denied separately.
+- Real DB proof covers 12000→15000 net replacement with original unchanged, void, valid replacement-revision chaining, repeated-original denial, invalid replacement rollback, owner-only injected failure after inverse creation, concurrent distinct correction keys producing one accepted group/one attention result, table-specific tenant/direct-DML controls and replay/hash mismatch.
+- Independent verifier found five concrete failures despite initial green checks. One correction batch retained regressions; targeted independent real-DB recheck passed all five: target-bound replay, Admin-before-receipt permission, inverse payload/audit hashes, inverse-artifact target denial and equivalent-timezone timestamp acceptance with changed-instant denial. Rejections preserve facts/effects/groups; typed permission denial may append only its distinct denial audit.
+- Candidate final checks: 24 unit tests, lint/types/build/format/plan, real corrections suite and posting control passed. Original independent controls passed access/money/harness. Resources stopped. No correction UI, offline mutation, deployed service, CI approval or pilot readiness is claimed.
+- Risk: financial persistence, authorization, identity/hash, concurrency and runner. Rollback disables entry points and repairs forward, preserving every original/correction fact. Remaining full tasks depend on access/storage through deferred T2.2; present that blocker now rather than silently skipping a prerequisite.

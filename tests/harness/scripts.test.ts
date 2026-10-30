@@ -103,6 +103,16 @@ test('DB runner accepts the explicit posting suite', () => {
   expect(result.status).toBe(0);
 });
 
+test('DB runner accepts the explicit corrections suite', () => {
+  const result = runDb('corrections');
+  expect(result.status).toBe(0);
+  expect(
+    calls().some((call) =>
+      call.some((argument) => argument.includes('/corrections/')),
+    ),
+  ).toBe(true);
+});
+
 test('DB runner cleans an owned partial start while preserving its failure', () => {
   const result = runDb('harness');
 

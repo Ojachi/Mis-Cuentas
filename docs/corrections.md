@@ -1,0 +1,9 @@
+# Linked corrections
+
+`correct_financial_operation(business_id, target_operation_id, correction_operation_id, request)` is the only correction writer. An active Administrator sends a versioned request with `action` (`void` or `replace`) and a nonblank `reason`; a replacement carries the complete posting payload and exactly retains the target's `occurredAt` instant.
+
+The durable `financial_corrections` row is both correction group and receipt. A replay must use the same tenant, target operation/revision, correction operation ID, and canonical request; any mismatch rejects without mutation. A different request targeting an already corrected revision returns `attention`; a later correction must target the replacement operation explicitly. Inverse artifacts are never valid targets.
+
+The function appends an inverse fact at the original occurrence instant, then posts a replacement through the existing posting adapter in one transaction. The inverse fact and its audit share the hash of its canonical inverse payload; correction request hashes remain group/audit metadata. Originals and their effects are never changed. Equivalent timestamp text is accepted when it resolves to the original instant; a changed instant is denied without rewriting the submitted payload. `corrected_at` and actor retain the actual correction audit separately from America/Bogota reporting attribution.
+
+Only same-tenant active-Administrator denials through this RPC create a retained `financial_correction_audit` row with `event = denied`; this is intentionally separate from accepted correction audit and does not create financial effects or a success receipt. Foreign and unauthenticated calls fail closed without revealing or auditing target history. Direct SQL permission failures are enforced by RLS/grants and are not falsely represented as application audit events.

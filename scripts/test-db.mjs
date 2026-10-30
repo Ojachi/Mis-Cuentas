@@ -15,10 +15,10 @@ import { join, resolve } from 'node:path';
 const suite = process.argv[2];
 if (
   process.argv.length !== 3 ||
-  !['harness', 'access', 'money', 'posting'].includes(suite)
+  !['harness', 'access', 'money', 'posting', 'corrections'].includes(suite)
 ) {
   console.error(
-    'Expected exactly one DB suite: harness, access, money or posting',
+    'Expected exactly one DB suite: harness, access, money, posting or corrections',
   );
   process.exitCode = 1;
 } else {
@@ -166,6 +166,18 @@ sql_paths = ["./seed.sql"]
       if (concurrent.some((result) => result.status === 'rejected'))
         throw new Error('concurrent posting probe failed');
       query('posting/assert.sql');
+    } else if (suite === 'corrections') {
+      query('corrections/check.sql');
+      query('corrections/security.sql');
+      query('corrections/rollback.sql');
+      const concurrent = await Promise.allSettled([
+        concurrentQuery('corrections/concurrent-a.sql'),
+        concurrentQuery('corrections/concurrent-b.sql'),
+      ]);
+      if (concurrent.some((result) => result.status === 'rejected'))
+        throw new Error('concurrent correction probe failed');
+      query('corrections/assert.sql');
+      query('corrections/independent-probes.sql');
     } else {
       query('access/setup.sql');
       query('access/bypass-probe.sql');

@@ -136,7 +136,7 @@ No checkbox becomes complete until acceptance, named fixtures and evidence are o
   - Expected: identical client/server reject/accept fixture results, exact sums and inverse overflow rejection.
   - Rollback: disable new posting adapter; version contracts without rewriting frozen payloads or persisted money.
 
-- [ ] **T3.2 — Create immutable facts, audit and receipt posting**
+- [x] **T3.2 — Create immutable facts, audit and receipt posting**
   - Depends: T2.1, T3.1. Decisions: none.
   - Surface: future `supabase/migrations/`, posting RPC, `tests/db/posting/`.
   - Spec: [Auditable finance records](specs/financial-records/spec.md#requirement-auditable-finance-records), scenario “Record normal operations”; [frozen identity](specs/offline-financial-sync/spec.md#requirement-frozen-identity-and-receipt-resolution).
@@ -315,7 +315,7 @@ Exact scenario names are listed in the owning tasks; T6.1/T6.3 verify full integ
 | Planning | P0 | VERIFIED | Current implementation evidence below; branch 01-foundation-a, no commit | D01 approved; user owns D02–D09 |
 | 1 Foundation | T1.1, T1.2 | VERIFIED | Current local unit/DB/browser/quality harnesses passed; isolation corrections rechecked | T2.1/T2.2 eligible; remote CI unverified |
 | 2 Access/shell | T2.1, T2.2, T2.3, T2.4 | IN_PROGRESS | T2.1 VERIFIED with real-role and concurrent DB proof; T2.2 isolated/PARTIAL, not integrated | Resolve T2.2 proof; D08 then D05 |
-| 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | IN_PROGRESS | T3.1 VERIFIED, shared fixtures and independent real DB parity/control suites passed | T3.2 then T3.3 eligible; shell remains deferred |
+| 3 Domain/sync | T3.1, T3.2, T3.3, T3.4, T3.5, T3.6, T3.7 | IN_PROGRESS | T3.1/T3.2 VERIFIED; exact domain and atomic tenant-scoped posting proven independently | T3.3 eligible; shell-dependent access/storage still deferred |
 | 4 Operations | T4.1, T4.2, T4.3, T4.4 | UNSTARTED | None / absent / PENDING | Domain/sync and D02–D04/D07 |
 | 5 Exchange | T5.1, T5.2, T5.3 | UNSTARTED | None / absent / PENDING | T4.1; D06/D07 |
 | 6 Release | T6.1, T6.2, T6.3 | UNSTARTED | None / absent / PENDING | Integrated proof; D09 |
@@ -406,3 +406,10 @@ Historical registration failures above were resolved by a later successful retry
 - RED observed for missing numeric domain and unsupported money DB suite. GREEN: four domain fixtures cover signed-64 parsing, positive inputs, exact quantities/products, seven effects, 21000 profit/27000 flow and dated baseline contracts; eleven runner/plan tests pass. Full actual-workspace lint, types, 18 unit tests, build, format and plan passed.
 - Independent verifier reran money, harness and access against real disposable PostgreSQL; parity/boundaries/NULL rejection and concurrent access controls passed. Retained SQL NULL regression. Scratch app-wide types were unavailable due dependency-symlink assembly; direct domain compilation and actual-workspace types passed. No resources remain running.
 - Rollback: disable new numeric callers or forward-repair additive SQL; no stored financial data is changed by these functions. Risk: shared numeric contracts and DB runner. Native RDD remains disabled; remote CI/pilot/recovery remain unverified. T3.2 is eligible after this unit.
+
+### T3.2 — atomic immutable posting acceptance
+
+- Status: VERIFIED. Additive financial facts/effects/audit/receipts and one active-member-authorized posting RPC. Explicit schema/version/type/kind/snapshot/measure validation and separate occurrence/client/server timestamps. Canonical UTF-8 serialization/hash is shared with TypeScript; replay authenticates before returning one existing receipt, and mismatched hashes reject without mutation.
+- Independent functional verdict PASS for S1/S3/S5/S6. Real disposable PostgreSQL proved all seven operations, actual two-session business-lock contention with one identical committed outcome, owner-only second-transfer-leg failure rolling back all four tables, cross-tenant and anonymous denials, table-specific direct insert/update/delete denials, malformed required-field rejection with full-state hashes unchanged, and Unicode/escape/hash parity. Positive tenant controls prove implemented surfaces exist.
+- Actual project final checks passed lint/types/22 unit tests/build/format/plan and real posting suite. Independent verifier also passed old harness/access/money DB suites, runner 12 tests and posting 3 tests. Scratch format limitation is explicitly separate; root checks passed. All owned DB resources stopped.
+- No financial screens, correction/sync/import/pilot completion or remote deployment is claimed. Native RDD remains off. Risk: persisted financial facts, authorization, contract/hash, concurrency and runner. Rollback disables entry points/forward-repairs only; no stored history deletion. T3.3 now eligible.

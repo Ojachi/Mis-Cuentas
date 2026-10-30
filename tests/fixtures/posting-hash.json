@@ -1,0 +1,13 @@
+{
+  "payload": {
+    "account": "cash",
+    "amount": "3000",
+    "clientCreatedAt": "2026-10-24T12:01:00-05:00",
+    "description": "Gas \"niño\" \\ ruta 🐶",
+    "kind": "expense",
+    "occurredAt": "2026-10-24T12:00:00-05:00",
+    "version": "1"
+  },
+  "canonical": "{\"account\": \"cash\", \"amount\": \"3000\", \"clientCreatedAt\": \"2026-10-24T12:01:00-05:00\", \"description\": \"Gas \\\"niño\\\" \\\\ ruta 🐶\", \"kind\": \"expense\", \"occurredAt\": \"2026-10-24T12:00:00-05:00\", \"version\": \"1\"}",
+  "hash": "a76ccd0f1ac096ec0e77a84c3387f77b8d6c3f8ff87c4df15407a39d29cc268f"
+}

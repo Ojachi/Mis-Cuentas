@@ -15,9 +15,11 @@ import { join, resolve } from 'node:path';
 const suite = process.argv[2];
 if (
   process.argv.length !== 3 ||
-  !['harness', 'access', 'money'].includes(suite)
+  !['harness', 'access', 'money', 'posting'].includes(suite)
 ) {
-  console.error('Expected exactly one DB suite: harness, access or money');
+  console.error(
+    'Expected exactly one DB suite: harness, access, money or posting',
+  );
   process.exitCode = 1;
 } else {
   const root = resolve(import.meta.dirname, '..');
@@ -94,6 +96,30 @@ sql_paths = ["./seed.sql"]
         join(root, 'tests', 'db', file),
       ]);
 
+    const concurrentQuery = (file) =>
+      new Promise((resolveQuery, rejectQuery) => {
+        const child = spawn(
+          'supabase',
+          [
+            ...scoped,
+            'db',
+            'query',
+            '--local',
+            '--file',
+            join(root, 'tests', 'db', file),
+          ],
+          { stdio: 'inherit' },
+        );
+        child.on('error', rejectQuery);
+        child.on('close', (status) => {
+          if (status === 0) resolveQuery();
+          else
+            rejectQuery(
+              new Error(`concurrent ${file} failed with exit ${status ?? 1}`),
+            );
+        });
+      });
+
     if (suite === 'harness') {
       query('harness.sql');
     } else if (suite === 'money') {
@@ -113,42 +139,45 @@ sql_paths = ["./seed.sql"]
         ),
       );
       command([...scoped, 'db', 'query', '--local', '--file', probePath]);
+    } else if (suite === 'posting') {
+      query('posting/check.sql');
+      query('posting/security.sql');
+      query('posting/rollback.sql');
+      const fixture = readFileSync(
+        join(root, 'tests', 'fixtures', 'posting-hash.json'),
+        'utf8',
+      );
+      const probePath = join(workdir, 'posting-parity.sql');
+      writeFileSync(
+        probePath,
+        readFileSync(
+          join(root, 'tests', 'db', 'posting', 'parity.sql'),
+          'utf8',
+        ).replace(
+          '__POSTING_FIXTURE__',
+          `'${fixture.replaceAll("'", "''")}'::jsonb`,
+        ),
+      );
+      command([...scoped, 'db', 'query', '--local', '--file', probePath]);
+      const concurrent = await Promise.allSettled([
+        concurrentQuery('posting/concurrent-a.sql'),
+        concurrentQuery('posting/concurrent-b.sql'),
+      ]);
+      if (concurrent.some((result) => result.status === 'rejected'))
+        throw new Error('concurrent posting probe failed');
+      query('posting/assert.sql');
     } else {
       query('access/setup.sql');
       query('access/bypass-probe.sql');
       query('access/anon-probe.sql');
-
-      const concurrentQuery = (file) =>
-        new Promise((resolveQuery, rejectQuery) => {
-          const child = spawn(
-            'supabase',
-            [
-              ...scoped,
-              'db',
-              'query',
-              '--local',
-              '--file',
-              join(root, 'tests', 'db', 'access', file),
-            ],
-            { stdio: 'inherit' },
-          );
-          child.on('error', rejectQuery);
-          child.on('close', (status) => {
-            if (status === 0) resolveQuery();
-            else
-              rejectQuery(
-                new Error(`concurrent ${file} failed with exit ${status ?? 1}`),
-              );
-          });
-        });
 
       for (const [kind, first, second] of [
         ['deactivation', 'concurrent-a.sql', 'concurrent-b.sql'],
         ['demotion', 'demote-a.sql', 'demote-b.sql'],
       ]) {
         const concurrent = await Promise.allSettled([
-          concurrentQuery(first),
-          concurrentQuery(second),
+          concurrentQuery(`access/${first}`),
+          concurrentQuery(`access/${second}`),
         ]);
         if (
           concurrent.filter((result) => result.status === 'rejected').length !==

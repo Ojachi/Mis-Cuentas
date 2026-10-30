@@ -10,3 +10,4 @@ export {
   balanceAfter,
   type MoneyCop,
 } from './money-effects';
+export { canonicalPosting } from './posting';
